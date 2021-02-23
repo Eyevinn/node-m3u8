@@ -152,6 +152,18 @@ describe('parser', function() {
 
   });
 
+  describe('#EXT-X-DATERANGE', function() {
+    it('should handle a set of attributes / value pairs for a range of time', function() {
+      var parser = getParser();
+
+      parser['EXT-X-DATERANGE']('START-DATE="2020-11-21T10:00:00.000Z",X-CUSTOM="MY CUSTOM TAG"');
+      parser.EXTINF('4.5,some title');
+      parser.currentItem.constructor.name.should.eql('PlaylistItem');
+      parser.currentItem.get('daterange')['START-DATE'].should.eql('2020-11-21T10:00:00.000Z');
+      parser.currentItem.toString().should.eql('#EXT-X-DATERANGE:START-DATE="2020-11-21T10:00:00.000Z",X-CUSTOM="MY CUSTOM TAG"\n#EXTINF:4.5000,some title\n');
+    });
+  });
+
   describe('#EXT-X-STREAM-INF', function() {
     it('should create a new Stream item', function() {
       var parser = getParser();
@@ -192,6 +204,18 @@ describe('parser', function() {
       keyValues[0].key.should.eql('KEY');
       keyValues[0].value.should.eql('"I, am a value"');
       keyValues[2].value.should.eql('NO');
+    });
+  });
+
+  describe('#EXT-X-ASSET', function() {
+    it('should return asset metadata', function() {
+      var parser = getParser();
+
+      parser['EXT-X-CUE-OUT']('30');
+      parser['EXT-X-ASSET']('CAID=0x0000000020FB6501');
+      parser.EXTINF('4.5,some title');
+      parser.currentItem.constructor.name.should.eql('PlaylistItem');
+      parser.currentItem.get('assetdata').should.eql('CAID=0x0000000020FB6501');
     });
   });
 });
