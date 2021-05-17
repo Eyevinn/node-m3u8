@@ -70,7 +70,7 @@ describe('parsing playlist m3u8', function() {
     });
   });
 
-  describe('43th PlaylistItem', function() {
+  describe('14th PlaylistItem', function() {
     it('has a cue in', function(done) {
       var parser = getParser();
 
