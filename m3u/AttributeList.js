@@ -32,7 +32,7 @@ var dataTypes = AttributeList.dataTypes = {
   'assetdata'            : 'quoted-string',
   'daterange'            : 'quoted-string-array',
   'channels'             : 'quoted-string',
-  'closed-captions'      : 'quoted-string',
+  'closed-captions'      : 'closed-captions',
   'key-method'           : 'enumerated-string',
   'key-uri'              : 'quoted-string',
   'key-iv'               : 'hexadecimal-sequence',
@@ -83,6 +83,10 @@ AttributeList.unserialize = function unserialize(object) {
   return list;
 };
 
+function coerceQuotedString(value) {
+  return '"' + value.replace(/"/g, '\\"') + '"';
+}
+
 var coerce = {
   'boolean': function coerceBoolean(value) {
     return value ? 'YES' : 'NO';
@@ -101,8 +105,12 @@ var coerce = {
   'enumerated-string': function coerceEnumeratedString(value) {
     return value;
   },
-  'quoted-string': function coerceQuotedString(value) {
-    return '"' + value.replace(/"/g, '\\"') + '"';
+  'quoted-string': coerceQuotedString,
+  'closed-captions': function closedCaptions(value) {
+    if (value === 'NONE') {
+      return value;
+    }
+    return coerceQuotedString(value);
   },
   'quoted-string-array': function coerceQuotedStringArray(value) {
     var s = value.map(function(v) {
@@ -118,6 +126,17 @@ var coerce = {
     return value;
   }
 };
+
+function parseQuotedString(value) {
+  if (Array.isArray(value)) {
+    return value.join(',');
+  } else if (value.indexOf('"') === 0 &&
+              value.lastIndexOf('"') == value.length - 1) {
+    return value.slice(1,-1);
+  } else {
+    return value;
+  }
+}
 
 var parse = {
   'boolean': function parseBoolean(value) {
@@ -135,16 +154,8 @@ var parse = {
   'enumerated-string': function parseEnumeratedString(value) {
     return value;
   },
-  'quoted-string': function parseQuotedString(value) {
-    if (Array.isArray(value)) {
-      return value.join(',');
-    } else if (value.indexOf('"') === 0 &&
-               value.lastIndexOf('"') == value.length - 1) {
-      return value.slice(1,-1);
-    } else {
-      return value;
-    }
-  },
+  'quoted-string': parseQuotedString,
+  'closed-captions': parseQuotedString,
   'quoted-string-array': function parseQuotedStringArray(value) {
     var data = {};
     value.split(',').map(function(kv) {

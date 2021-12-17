@@ -1,4 +1,5 @@
 var fs     = require('fs'),
+    { Readable } = require('stream'),
     M3U    = require('../m3u'),
     sinon  = require('sinon'),
     should = require('should');
@@ -193,6 +194,17 @@ describe('m3u', function() {
       var endStr = '#EXT-X-ENDLIST\n';
       output.indexOf(endStr).should.eql(output.length - endStr.length);
     });
+
+    it('stringified output should match parsed input', function(done) {
+      getVariantM3U(function(error, m3u, original) {
+        if (error) {
+          done(error);
+        }
+
+        m3u.toString().should.eql(original);
+        done();
+      });
+    });
   });
 
   describe('writeLive', function() {
@@ -214,11 +226,19 @@ function getM3u() {
 
 function getVariantM3U(callback) {
   var parser      = require('../parser').createStream();
-  var variantFile = fs.createReadStream(
-    __dirname + '/fixtures/variant.m3u8'
-  );
-  variantFile.pipe(parser);
-  parser.on('m3u', function(m3u) {
-    callback(null, m3u);
-  });
+  fs.readFile(__dirname + '/fixtures/variant.m3u8', function(err, buffer) {
+    if (err) {
+      callback(err);
+      return;
+    }
+
+    var stream = Readable.from(buffer);
+    stream.pipe(parser);
+    parser.on('m3u', function(m3u) {
+      callback(null, m3u, buffer.toString());
+    });
+  })
+  // var variantFile = fs.createReadStream(
+  //   __dirname + '/fixtures/variant.m3u8'
+  // );
 }

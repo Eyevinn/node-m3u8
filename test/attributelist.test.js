@@ -18,6 +18,22 @@ describe('AttributeList', function() {
 
       list.attributes.bandwidth.should.equal(1);
     });
+
+    it('should correctly handle CLOSED-CAPTIONS=NONE', function() {
+      var list = createAttributeList();
+
+      list.set('closed-captions', 'NONE');
+
+      list.attributes['closed-captions'].should.equal('NONE');
+    });
+
+    it('should correctly handle CLOSED-CAPTIONS="eng"', function() {
+      var list = createAttributeList();
+
+      list.set('closed-captions', '"eng"');
+
+      list.attributes['closed-captions'].should.equal('eng');
+    });
   });
 
   describe('#get', function() {
@@ -33,6 +49,20 @@ describe('AttributeList', function() {
       var list = createAttributeList();
 
       list.getCoerced('audio').should.eql('"hello"');
+    });
+
+    it('should correctly handle CLOSED-CAPTIONS=NONE', function() {
+      var list = createAttributeList();
+
+      list.attributes['closed-captions'] = 'NONE';
+      list.getCoerced('closed-captions').should.eql('NONE');
+    });
+
+    it('should correctly handle CLOSED-CAPTIONS="eng"', function() {
+      var list = createAttributeList();
+
+      list.attributes['closed-captions'] = 'eng';
+      list.getCoerced('closed-captions').should.eql('"eng"');
     });
   });
 
