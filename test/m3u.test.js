@@ -195,7 +195,7 @@ describe('m3u', function() {
       output.indexOf(endStr).should.eql(output.length - endStr.length);
     });
 
-    it('stringified output should match parsed input', function(done) {
+    it('stringified output should match input', function(done) {
       getVariantM3U(function(error, m3u, original) {
         if (error) {
           done(error);
