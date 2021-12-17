@@ -238,7 +238,4 @@ function getVariantM3U(callback) {
       callback(null, m3u, buffer.toString());
     });
   })
-  // var variantFile = fs.createReadStream(
-  //   __dirname + '/fixtures/variant.m3u8'
-  // );
 }
