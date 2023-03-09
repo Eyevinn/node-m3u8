@@ -41,7 +41,8 @@ var dataTypes = AttributeList.dataTypes = {
   'map-uri'              : 'quoted-string',
   'map-byterange'        : 'quoted-string',
   'start-timeoffset'     : 'decimal-floating-point',
-  'start-precise'        : 'boolean'
+  'start-precise'        : 'boolean',
+  'video-range'          : 'quoted-string'
 };
 
 AttributeList.prototype.mergeAttributes = function mergeAttributes(attributes) {
