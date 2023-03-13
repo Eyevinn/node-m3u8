@@ -143,6 +143,9 @@ m3uParser.prototype['EXTINF'] = function parseInf(data) {
     if (this.key.iv) {
       this.currentItem.set('key-iv', this.key.iv);
     }
+    if (this.key.keyId) {
+      this.currentItem.set('key-id', this.key.keyId);
+    }
     if (this.key.keyFormat) {
       this.currentItem.set('key-keyformat', this.key.keyFormat);
     }
@@ -255,6 +258,7 @@ m3uParser.prototype['EXT-X-KEY'] = function parseInf(data) {
     method: null,
     uri: null,
     iv: null,
+    keyId: null,
     keyFormat: null,
     keyFormatVersions: null,
   };
@@ -268,6 +272,7 @@ m3uParser.prototype['EXT-X-KEY'] = function parseInf(data) {
   if (method.value.toLowerCase() !== 'none' ) {
     var uri = attr.find(elem => elem.key.toLowerCase() === 'uri');
     var iv = attr.find(elem => elem.key.toLowerCase() === 'iv');
+    var keyId = attr.find(elem => elem.key.toLowerCase() === 'keyid');
     var keyFormat = attr.find(elem => elem.key.toLowerCase() === 'keyformat');
     var keyFormatVersions = attr.find(elem => elem.key.toLowerCase() === 'keyformatversions');
     if (uri) {
@@ -275,6 +280,9 @@ m3uParser.prototype['EXT-X-KEY'] = function parseInf(data) {
     }
     if (iv) {
       this.key.iv = iv.value;
+    }
+    if (keyId) {
+      this.key.keyId = keyId.value;
     }
     if (keyFormat) {
       this.key.keyFormat = keyFormat.value;

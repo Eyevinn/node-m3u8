@@ -36,6 +36,7 @@ var dataTypes = AttributeList.dataTypes = {
   'key-method'           : 'enumerated-string',
   'key-uri'              : 'quoted-string',
   'key-iv'               : 'hexadecimal-sequence',
+  'key-id'               : 'hexadecimal-sequence',
   'key-keyformat'        : 'quoted-string',
   'key-keyformatversions': 'quoted-string',
   'map-uri'              : 'quoted-string',
