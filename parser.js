@@ -22,6 +22,7 @@ var m3uParser = module.exports = function m3uParser() {
   this.scteData = null;
   this.dateRangeData = null;
   this.key = null;
+  this.keys = null;
   this.map = null;
   this.startOffset = null;
 
@@ -151,8 +152,13 @@ m3uParser.prototype['EXTINF'] = function parseInf(data) {
     }
     if (this.key.keyFormatVersions) {
       this.currentItem.set('key-keyformatversions', this.key.keyFormatVersions);
-    }
+    }      
     this.key = null;
+  }
+
+  if (this.keys != null) {
+    this.currentItem.set('keys', this.keys);
+    this.keys = null;
   }
 
   if (this.map !== null) {
@@ -290,6 +296,12 @@ m3uParser.prototype['EXT-X-KEY'] = function parseInf(data) {
     if (keyFormatVersions) {
       this.key.keyFormatVersions = keyFormatVersions.value;
     }
+  }
+  if (!this.keys) {
+    this.keys = {};
+  }
+  if (this.key.keyFormat) {
+    this.keys[this.key.keyFormat.slice(1,-1)] = this.key;
   }
 }
 

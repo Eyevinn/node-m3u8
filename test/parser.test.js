@@ -187,6 +187,25 @@ describe('parser', function() {
       (parser.currentItem.get('key-keyformat') === undefined).should.be.true();
       (parser.currentItem.get('key-keyformatversions') === undefined).should.be.true();
     });
+    it('should support two or more EXT-X-KEY tags with different KEYFORMAT attributes', function() {
+      var parser = getParser();
+      parser['EXT-X-KEY']('METHOD=SAMPLE-AES,URI="https://mock.mock.com/key",IV=0x2b4420d1f5d6dff30dde825ae7012450,KEYFORMAT="identity1",KEYFORMATVERSIONS="5"');
+      parser['EXT-X-KEY']('METHOD=SAMPLE-AES-CTR,URI="https://mock.mock.com/key",IV=0x2b4420d1f5d6dff30dde825ae7012450,KEYFORMAT="identity2",KEYFORMATVERSIONS="5"');
+      parser.EXTINF('10,some title');
+      parser.currentItem.constructor.name.should.eql('PlaylistItem');
+      const keys = parser.currentItem.get('keys');
+      keys['identity1']['method'].should.eql('SAMPLE-AES');
+      keys['identity1']['uri'].should.eql('"https://mock.mock.com/key"');
+      keys['identity1']['iv'].should.eql('0x2b4420d1f5d6dff30dde825ae7012450');
+      keys['identity1']['keyFormat'].should.eql('"identity1"');
+      keys['identity1']['keyFormatVersions'].should.eql('"5"');
+
+      keys['identity2']['method'].should.eql('SAMPLE-AES-CTR');
+      keys['identity2']['uri'].should.eql('"https://mock.mock.com/key"');
+      keys['identity2']['iv'].should.eql('0x2b4420d1f5d6dff30dde825ae7012450');
+      keys['identity2']['keyFormat'].should.eql('"identity2"');
+      keys['identity2']['keyFormatVersions'].should.eql('"5"');
+    });
   });
 
   describe('#EXT-X-MAP', function() {

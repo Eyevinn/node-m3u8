@@ -10,6 +10,7 @@ var Item = module.exports = function Item(attributes) {
     duration      : null,
     title         : null,
     uri           : null,
+    keys          : null,
   };
 };
 

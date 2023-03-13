@@ -51,7 +51,27 @@ PlaylistItem.prototype.toString = function toString() {
     }
     output.push('#EXT-X-PROGRAM-DATE-TIME:' + date);
   }
-  if (this.get('key-method')) {
+  if (this.get('keys') && Object(this.get('keys')).length > 0) {
+    var keys = this.get('keys');
+    var keyFormats = Object.keys(this.get('keys'));
+    for (let i = 0; i < keysFormats.length; i++) {
+      const key = keys[keyFormats[i]];
+      var line = `#EXT-X-KEY:METHOD=${key['key-method']}`;
+      if (key['key-uri']) {
+        line += `,URI="${key['key-uri']}"`;
+      }
+      if (key['key-iv']) {
+        line += `,IV=${key['key-iv']}`;
+      }
+      if (key['key-keyformat']) {
+        line += `,KEYFORMAT="${key['key-keyformat']}"`;
+      }
+      if (key['key-keyformatversions']) {
+        line += `,KEYFORMATVERSIONS="${key['key-keyformatversions']}"`;
+      }
+      output.push(line);  
+    }
+  } else if (this.get('key-method')) {
     var line = `#EXT-X-KEY:METHOD=${this.get('key-method')}`;
     if (this.get('key-uri')) {
       line += `,URI="${this.get('key-uri')}"`;
