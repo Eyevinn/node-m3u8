@@ -1,9 +1,9 @@
 {
-    "name": "@eyevinn/m3u8",
-    "version": "0.5.6",
-    "description": "streaming m3u8 parser for Apple's HTTP Live Streaming protocol",
-    "main": "./parser.js",
-    "keywords": [
+    "name" : "m3u8",
+    "version" : "0.0.10",
+    "description" : "streaming m3u8 parser for Apple's HTTP Live Streaming protocol",
+    "main" : "./parser.js",
+    "keywords" : [
         "m3u",
         "m3u8",
         "hls",
