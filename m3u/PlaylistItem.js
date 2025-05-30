@@ -15,22 +15,15 @@ PlaylistItem.create = function createPlaylistItem(data) {
 
 PlaylistItem.prototype.toString = function toString() {
   var output = [];
+  if (this.get('discontinuity')) {
+    output.push('#EXT-X-DISCONTINUITY');
+  }
   if (this.get('start-timeoffset')) {
     var line = `#EXT-X-START:TIME-OFFSET=${this.get('start-timeoffset')}`;
     if (this.get('start-precise')) {
       line += `,PRECISE=${this.get('start-precise') ? 'YES' : 'NO'}`;
     }
     output.push(line);
-  }
-  if (this.get('map-uri')) {
-    var line = `#EXT-X-MAP:URI="${this.get('map-uri')}"`;
-    if (this.get('map-byterange')) {
-      line += `,BYTERANGE=${this.get('map-byterange')}`;
-    }
-    output.push(line);
-  }
-  if (this.get('discontinuity')) {
-    output.push('#EXT-X-DISCONTINUITY');
   }
   if (this.get('cuein')) {
     output.push('#EXT-X-CUE-IN');
@@ -50,6 +43,13 @@ PlaylistItem.prototype.toString = function toString() {
       date = date.toISOString();
     }
     output.push('#EXT-X-PROGRAM-DATE-TIME:' + date);
+  }
+  if (this.get('map-uri')) {
+    var line = `#EXT-X-MAP:URI="${this.get('map-uri')}"`;
+    if (this.get('map-byterange')) {
+      line += `,BYTERANGE=${this.get('map-byterange')}`;
+    }
+    output.push(line);
   }
   if (this.get('keys') && Object(this.get('keys')).length > 0) {
     var keys = this.get('keys');
